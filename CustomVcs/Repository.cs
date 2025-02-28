@@ -321,5 +321,35 @@ namespace CustomVcs
 
             File.WriteAllBytes(filePath, blobContent);
         }
+
+        public void ShowLog()
+        {
+            // Укажите путь к файлу log.txt
+            string logFilePath = Path.Combine(_commitsDir, "log.txt");
+
+            if (!File.Exists(logFilePath))
+            {
+                Console.WriteLine("No commits yet.\n");
+                return;
+            }
+
+            var lines = File.ReadAllLines(logFilePath);
+            foreach (var line in lines.Reverse())
+            {
+                var parts = line.Split(new[] { ' ' }, 4); // Разделяем строку на части
+                if (parts.Length < 4)
+                    continue;
+
+                string commitHash = parts[0]; // Хэш коммита
+                string date = parts[1]; // Дата коммита
+                string message = parts[2]; // Сообщение коммита
+                string parentHash = parts[3]; // Хэш родительского коммита (если есть)
+
+                Console.WriteLine($"commit {commitHash}");
+                Console.WriteLine($"Date: {date}");
+                Console.WriteLine($"Message: {message}");
+                Console.WriteLine();
+            }
+        }
     }
 }
