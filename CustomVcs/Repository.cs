@@ -352,7 +352,7 @@ namespace CustomVcs
             }
         }
 
-        internal void PrintInfo()
+        public void PrintInfo()
         {
             Console.WriteLine("Доступные команды:");
             Console.WriteLine("Init - Инициализирует новый репозиторий.");
