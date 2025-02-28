@@ -321,5 +321,52 @@ namespace CustomVcs
 
             File.WriteAllBytes(filePath, blobContent);
         }
+
+        public void ShowLog()
+        {
+            EnsureInitialized();
+            if (!File.Exists(_headFilePath))
+            {
+                Console.WriteLine("No commits yet.");
+            return;
+            }
+            string currentCommitHash = File.ReadAllText(_headFilePath).Trim();
+            if (string.IsNullOrEmpty(currentCommitHash))
+            {
+                Console.WriteLine("No commits yet.");
+            return;
+            }
+            while (!string.IsNullOrEmpty(currentCommitHash))
+            {
+                string commitPath = Path.Combine(_commitsDir, currentCommitHash);
+                if (!File.Exists(commitPath))
+                {
+                    Console.WriteLine($"Commit object not found: {currentCommitHash}");
+                break;
+                }
+                var commitLines = File.ReadAllLines(commitPath);
+                string treeHash = null;
+                string parentHash = null;
+                string date = null;
+                string message = null;
+                foreach (var line in commitLines)
+                {
+                    if (line.StartsWith("tree "))
+                        treeHash = line[5..].Trim();
+                    else if (line.StartsWith("parent "))
+                        parentHash = line[7..].Trim();
+                    else if (line.StartsWith("date "))
+                        date = line[5..].Trim();
+                    else if (line.StartsWith("message "))
+                        message = line[8..].Trim();
+                }
+                Console.WriteLine($"commit {currentCommitHash}");
+                Console.WriteLine($"Date: {date}");
+                Console.WriteLine($"message: {message}");
+                Console.WriteLine();
+                currentCommitHash = parentHash;
+            }
+        }
+
     }
 }

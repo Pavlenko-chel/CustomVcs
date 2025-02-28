@@ -26,10 +26,10 @@
                         repository.Commit(message);
                         break;
                     case CommandType.Checkout:
-                        //repository.Checkout(args[1]);
+                        repository.Checkout(args[1]);
                         break;
                     case CommandType.Log:
-                        //repository.ShowLog();
+                        repository.ShowLog();
                         break;
                     case CommandType.Unknown:
                         break;
