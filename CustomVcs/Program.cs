@@ -1,6 +1,9 @@
-﻿static void Main(string[] args)
+﻿public class Program
 {
-    var dir = Directory.GetCurrentDirectory();
-    Console.WriteLine(dir);
-    Console.WriteLine(args[0]);
-}
+    private const string RepoDir = ".CustomVcs";
+static void Main(string[] args) 
+    {
+
+    }
+}
+
