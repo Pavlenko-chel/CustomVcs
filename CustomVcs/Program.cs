@@ -22,8 +22,8 @@
                         repository.Add(args[1]);
                         break;
                     case CommandType.Commit:
-                        //var message = GetMessage(args);
-                        //repository.Commit(message);
+                        var message = GetMessage(args);
+                        repository.Commit(message);
                         break;
                     case CommandType.Checkout:
                         //repository.Checkout(args[1]);
@@ -56,6 +56,30 @@
                 "checkout" => CommandType.Checkout,
                 _ => CommandType.Unknown
             };
+        }
+
+        private static string GetMessage(string[] args)
+        {
+            var message = string.Empty;
+
+            // Проверяем, что аргументов достаточно
+            if (args.Length >= 3 && args[1] == "-m")
+            {
+                // Сообщение коммита может быть в кавычках
+                // Проверяем, начинается ли сообщение с кавычек
+                if (args[2].StartsWith("\"") && args[2].EndsWith("\""))
+                {
+                    // Убираем кавычки
+                    message = args[2].Trim('"');
+                }
+                else
+                {
+                    // Если кавычек нет, то просто берем аргумент как есть
+                    message = args[2];
+                }
+            }
+
+            return message;
         }
 
     }
