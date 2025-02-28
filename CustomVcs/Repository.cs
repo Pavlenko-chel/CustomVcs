@@ -244,5 +244,82 @@ namespace CustomVcs
 
             return string.Empty;
         }
+
+        public void Checkout(string commitHash)
+        {
+            EnsureInitialized();
+            var commitPath = Path.Combine(_commitsDir, commitHash);
+            if (!File.Exists(commitPath))
+                throw new FileNotFoundException($"Commit {commitPath} not found");
+            var commitContent = File.ReadAllLines(commitPath);
+            var treeHash = string.Empty;
+            foreach (string v in commitContent)
+            {
+                if (v.StartsWith("tree "))
+                    treeHash = v.Substring(5, 40);
+            }
+            if (string.IsNullOrEmpty(treeHash))
+                throw new Exception($"Tree for commit {commitHash} is not found");
+            var curDir = Directory.GetCurrentDirectory();
+            var currentFiles = Directory.GetFiles(curDir,
+            "*"
+            ,
+            SearchOption.AllDirectories)
+            .Where(f => !f.Contains(Path.Combine(curDir, _repoDir)));
+            var restoredFiles = RestoreTree(treeHash, curDir);
+            foreach (var file in currentFiles)
+            {
+                if (!restoredFiles.Contains(file))
+                    File.Delete(file);
+            }
+            File.WriteAllText(_headFilePath, commitHash);
+            Console.WriteLine($"Checkout on commit {commitHash}");
+        }
+
+        private HashSet<string> RestoreTree(string treeHash, string directory)
+        {
+            var restoredFiles = new HashSet<string>();
+
+            var treePath = Path.Combine(_commitsDir, treeHash);
+
+            if (!File.Exists(treePath))
+                throw new FileNotFoundException($"Tree for commit {treeHash} is not found");
+
+            var treeContent = File.ReadAllLines(treePath);
+
+            for (int i = 0; i < treeContent.Length; i++)
+            {
+                var parts = treeContent[i].Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts.Length != 2)
+                    throw new Exception("Invalid tree content");
+
+                var relativeFilePath = parts[0];
+                var obsoleteFilePath = Path.Combine(directory, relativeFilePath);
+                var blobHash = parts[1];
+
+                RestoreBlob(obsoleteFilePath, blobHash);
+
+                restoredFiles.Add(obsoleteFilePath);
+            }
+
+            return restoredFiles;
+        }
+
+        private void RestoreBlob(string filePath, string blobHash)
+        {
+            var blobPath = Path.Combine(_objectsDir, blobHash[..2], blobHash[2..]);
+
+            if (!File.Exists(blobPath))
+                throw new FileNotFoundException($"Blob {blobHash} is not found");
+
+            var blobContent = File.ReadAllBytes(blobPath);
+            var dir = Path.GetDirectoryName(filePath);
+
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            File.WriteAllBytes(filePath, blobContent);
+        }
     }
 }
