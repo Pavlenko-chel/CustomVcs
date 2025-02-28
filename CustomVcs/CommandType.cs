@@ -7,5 +7,5 @@ namespace CustomVcs
         Commit,
         Log,
         Checkout,
-        Unknown
+        Print,
     }}

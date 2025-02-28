@@ -351,5 +351,16 @@ namespace CustomVcs
                 Console.WriteLine();
             }
         }
+
+        internal void PrintInfo()
+        {
+            Console.WriteLine("Доступные команды:");
+            Console.WriteLine("Init - Инициализирует новый репозиторий.");
+            Console.WriteLine("Add - Добавляет файлы в индекс (staging area).");
+            Console.WriteLine("Commit - Приминяет изменения к репозиторию.");
+            Console.WriteLine("Log - Показывает историю коммита.");
+            Console.WriteLine("Checkout - Переклочение между ветками или коммитами.");
+            Console.WriteLine("PrintInfo - Показывает список всех команд с их описанием.");
+        }
     }
 }

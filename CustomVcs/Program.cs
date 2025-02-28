@@ -26,12 +26,13 @@
                         repository.Commit(message);
                         break;
                     case CommandType.Checkout:
-                        //repository.Checkout(args[1]);
+                        repository.Checkout(args[1]);
                         break;
                     case CommandType.Log:
-                        //repository.ShowLog();
+                        repository.ShowLog();
                         break;
-                    case CommandType.Unknown:
+                    case CommandType.Print:
+                        repository.PrintInfo();
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -54,7 +55,7 @@
                 "commit" => CommandType.Commit,
                 "log" => CommandType.Log,
                 "checkout" => CommandType.Checkout,
-                _ => CommandType.Unknown
+                "printinfo" => CommandType.Print,
             };
         }
 
