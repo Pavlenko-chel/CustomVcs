@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "CustomVcs": {
+      "commandName": "Project",
+      "commandLineArgs": "init, add, commit, log",
+      "workingDirectory": "C:\\Практическая по играм\\Рабочая директория"
+    }
+  }
+}

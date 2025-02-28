@@ -1,2 +1,6 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿static void Main(string[] args)
+{
+    var dir = Directory.GetCurrentDirectory();
+    Console.WriteLine(dir);
+    Console.WriteLine(args[0]);
+}
