@@ -19,7 +19,7 @@
                         repository.Init();
                         break;
                     case CommandType.Add:
-                        //repository.Add(args[1]);
+                        repository.Add(args[1]);
                         break;
                     case CommandType.Commit:
                         //var message = GetMessage(args);
